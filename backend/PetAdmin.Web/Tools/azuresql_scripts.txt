@@ -1,0 +1,173 @@
+﻿CREATE TABLE [dbo].[User]
+(
+	[UserId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [Email] VARCHAR(200) NOT NULL, 
+    [UserLogin] VARCHAR(200) NOT NULL, 
+    [PasswordHash] NVARCHAR(512) NOT NULL, 
+    [PasswordSalt] NVARCHAR(512) NOT NULL, 
+    [UserTypeId] INT NOT NULL, 
+    [IsActive] BIT NOT NULL, 
+    [Name] VARCHAR(500) NOT NULL, 
+    [CreationTime] DATETIME NOT NULL DEFAULT GETUTCDATE(),
+
+    CONSTRAINT [UK_UserPassword] UNIQUE ([UserId],[PasswordHash]),
+	CONSTRAINT [UK_UserUserName] UNIQUE ([UserId],[UserLogin]),
+	CONSTRAINT [UK_UserEmail] UNIQUE ([UserId],[Email])
+)
+
+GO
+
+CREATE TABLE [dbo].[Client]
+(
+	[ClientId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [UserId] UNIQUEIDENTIFIER NOT NULL, 
+    [ProfileTypeId] INT NOT NULL, 
+    [CreationTime] DATETIME NOT NULL DEFAULT GETUTCDATE(),
+
+	[PhoneNumber] VARCHAR(20) NULL, 
+    [Address] VARCHAR(300) NULL, 
+    [Complement] VARCHAR(200) NULL, 
+    [Name] VARCHAR(500) NULL, 
+    [Email] VARCHAR(200) NULL, 
+    [IsActive] BIT NOT NULL, 
+    [Neighborhood] VARCHAR(100) NULL, 
+    CONSTRAINT [FK_Client_User] FOREIGN KEY ([UserId]) REFERENCES [dbo].[User] ([UserId])
+)
+
+GO
+
+CREATE TABLE [dbo].[Employee]
+(
+	[EmployeeId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [Name] VARCHAR(250) NOT NULL, 
+    [Email] VARCHAR(200) NULL, 
+    [PhoneNumber] VARCHAR(20) NULL, 
+    [CreationTime] DATETIME NULL DEFAULT GETUTCDATE(), 
+    [ClientId] UNIQUEIDENTIFIER NOT NULL,
+
+	[IsActive] BIT NOT NULL, 
+    CONSTRAINT [FK_Employee_Client] FOREIGN KEY ([ClientId]) REFERENCES [dbo].[Client] ([ClientId])
+)
+
+GO
+
+CREATE TABLE [dbo].[PetLover]
+(
+	[PetLoverId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [UserId] UNIQUEIDENTIFIER NULL, 
+    [CreationTime] DATETIME NOT NULL DEFAULT GETUTCDATE(),
+
+	[PhoneNumber] VARCHAR(20) NULL, 
+    [Address] VARCHAR(300) NULL, 
+    [Complement] VARCHAR(150) NULL, 
+    [Name] VARCHAR(500) NULL, 
+    [Email] VARCHAR(200) NULL, 
+    [IsActive] BIT NOT NULL, 
+    [Neighborhood] VARCHAR(100) NULL, 
+    CONSTRAINT [FK_PetLover_User] FOREIGN KEY ([UserId]) REFERENCES [dbo].[User] ([UserId])
+)
+
+
+GO
+
+CREATE TABLE [dbo].[Pet]
+(
+	[PetId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [PetLoverId] UNIQUEIDENTIFIER NOT NULL, 
+    [CreationTime] DATETIME NOT NULL DEFAULT GETUTCDATE(), 
+    [PetTypeId] INT NULL, 
+    [Breed] VARCHAR(100) NULL, 
+    [BirthDate] DATETIME NULL, 
+    [Gender] INT NULL, 
+    [Size] INT NULL, 
+    [Coat] INT NULL, 
+    [Name] VARCHAR(200) NULL,
+
+	[Note] VARCHAR(400) NULL, 
+    [IsActive] BIT NOT NULL, 
+    CONSTRAINT [FK_Pet_PetLover] FOREIGN KEY ([PetLoverId]) REFERENCES [dbo].[PetLover] ([PetLoverId]),
+)
+
+GO
+
+CREATE TABLE [dbo].[ScheduleItem]
+(
+	[ScheduleItemId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [Name] VARCHAR(300) NOT NULL, 
+    [CreationTime] DATETIME NOT NULL DEFAULT GETUTCDATE(), 
+    [IsActive] BIT NOT NULL 
+)
+
+GO
+
+CREATE TABLE [dbo].[ScheduleItemClient]
+(
+	[ScheduleItemClientId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [ScheduleItemId] UNIQUEIDENTIFIER NOT NULL, 
+    [ClientId] UNIQUEIDENTIFIER NOT NULL,
+
+	[IsActive] BIT NOT NULL, 
+    [CreationTime] DATETIME NOT NULL DEFAULT GETUTCDATE(), 
+    CONSTRAINT [FK_Client_Schedule_Item] FOREIGN KEY ([ClientId]) REFERENCES [dbo].[Client] ([ClientId]),
+	CONSTRAINT [FK_Schedule_Item_Client] FOREIGN KEY ([ScheduleItemId]) REFERENCES [dbo].[ScheduleItem] ([ScheduleItemId])
+)
+
+GO
+
+CREATE TABLE [dbo].[ScheduleItemEmployee]
+(
+	[ScheduleItemEmployeeId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [ScheduleItemId] UNIQUEIDENTIFIER NOT NULL, 
+    [EmployeeId] UNIQUEIDENTIFIER NOT NULL,
+
+	[IsActive] BIT NOT NULL, 
+    [Price] NUMERIC(18, 2) NULL, 
+    [Hour] INT NULL, 
+    [Minutes] INT NULL, 
+    [CreationTime] DATETIME NOT NULL DEFAULT GETUTCDATE(), 
+    [Name] VARCHAR(300) NULL, 
+    CONSTRAINT [FK_Employee_Schedule_Item] FOREIGN KEY ([EmployeeId]) REFERENCES [dbo].[Employee] ([EmployeeId]),
+	CONSTRAINT [FK_Schedule_Item_Employee] FOREIGN KEY ([ScheduleItemId]) REFERENCES [dbo].[ScheduleItem] ([ScheduleItemId])
+)
+
+GO
+
+CREATE TABLE [dbo].[Schedule]
+(
+	[ScheduleId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [CreationTime] DATETIME NOT NULL DEFAULT GETUTCDATE(), 
+    [Period] INT NULL, 
+    [Date] DATE NOT NULL, 
+    [DateWithHour] DATETIME NOT NULL, 
+    [Note] VARCHAR(500) NULL, 
+    [Status] INT NOT NULL, 
+    [EmployeeId] UNIQUEIDENTIFIER NOT NULL, 
+    [PetLoverId] UNIQUEIDENTIFIER NULL, 
+    [PetId] UNIQUEIDENTIFIER NULL, 
+    [ScheduleItemEmployeeId] UNIQUEIDENTIFIER NULL,
+
+	[IsActive] BIT NOT NULL, 
+    CONSTRAINT [FK_Schedule_Employee] FOREIGN KEY ([EmployeeId]) REFERENCES [dbo].[Employee] ([EmployeeId]),
+	CONSTRAINT [FK_Schedule_PetLover] FOREIGN KEY ([PetLoverId]) REFERENCES [dbo].[PetLover] ([PetLoverId]),
+	CONSTRAINT [FK_Schedule_Pet] FOREIGN KEY ([PetId]) REFERENCES [dbo].[Pet] ([PetId]),
+	CONSTRAINT [FK_Schedule_ScheduleItemEmployee] FOREIGN KEY ([ScheduleItemEmployeeId]) REFERENCES [dbo].[ScheduleItemEmployee] ([ScheduleItemEmployeeId]),
+	CONSTRAINT [UC_Employee_DateWithHour] UNIQUE ([EmployeeId], [DateWithHour])
+)
+
+GO
+
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'QuantityAllowed'
+          AND Object_ID = Object_ID(N'dbo.Schedule'))
+BEGIN
+	ALTER TABLE Schedule
+	ADD QuantityAllowed INT NULL DEFAULT 0;
+END
+
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'QuantityOccupied'
+          AND Object_ID = Object_ID(N'dbo.Schedule'))
+BEGIN
+	ALTER TABLE Schedule
+	ADD QuantityOccupied INT NULL DEFAULT 0;
+END

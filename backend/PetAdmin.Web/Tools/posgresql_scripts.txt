@@ -1,0 +1,181 @@
+Scripts Postgresql
+-----------------
+
+
+-- Database: PetAdmin.Database
+
+-- DROP DATABASE "PetAdmin.Database";
+
+CREATE DATABASE "PetAdmin.Database"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Portuguese_Brazil.1252'
+    LC_CTYPE = 'Portuguese_Brazil.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+
+-----------------
+
+
+CREATE TABLE "User"
+(
+    "UserId" UUID PRIMARY KEY, 
+    "Email" VARCHAR(200) NOT NULL, 
+    "UserLogin" VARCHAR(200) NOT NULL, 
+    "PasswordHash" character(512) NOT NULL,
+    "PasswordSalt" character(512) NOT NULL, 
+    "UserTypeId" INT NOT NULL, 
+    "IsActive" BOOLEAN NOT NULL, 
+    "Name" VARCHAR(500) NOT NULL, 
+    "CreationTime" timestamp NOT NULL DEFAULT (now() at time zone 'utc'),
+
+    CONSTRAINT UK_UserPassword UNIQUE ("UserId","PasswordHash"),
+	CONSTRAINT UK_UserUserName UNIQUE ("UserId","UserLogin"),
+	CONSTRAINT UK_UserEmail UNIQUE ("UserId","Email")
+)
+
+-----------------
+
+CREATE TABLE "Client"
+(
+    "ClientId" UUID NOT NULL PRIMARY KEY, 
+    "UserId" UUID NOT NULL, 
+    "ProfileTypeId" INT NOT NULL, 
+    "CreationTime" timestamp NOT NULL DEFAULT (now() at time zone 'utc'),
+    "PhoneNumber" VARCHAR(20) NULL, 
+    "Address" VARCHAR(300) NULL, 
+    "Complement" VARCHAR(200) NULL, 
+    "Name" VARCHAR(500) NULL, 
+    "Email" VARCHAR(200) NULL, 
+    "IsActive" BOOLEAN NOT NULL, 
+    "Neighborhood" VARCHAR(100) NULL, 
+
+    CONSTRAINT FK_Client_User FOREIGN KEY ("UserId") REFERENCES "User" ("UserId")
+)
+
+-----------------
+
+CREATE TABLE "Employee"
+(
+    "EmployeeId" UUID NOT NULL PRIMARY KEY, 
+    "Name" VARCHAR(250) NOT NULL, 
+    "Email" VARCHAR(200) NULL, 
+    "PhoneNumber" VARCHAR(20) NULL, 
+    "CreationTime" timestamp NOT NULL DEFAULT (now() at time zone 'utc'),
+    "ClientId" UUID NOT NULL,
+	"IsActive" BOOLEAN NOT NULL, 
+
+    CONSTRAINT FK_Employee_Client FOREIGN KEY ("ClientId") REFERENCES "Client" ("ClientId")
+)
+
+-----------------
+
+CREATE TABLE "PetLover"
+(
+    "PetLoverId" UUID NOT NULL PRIMARY KEY, 
+    "UserId" UUID NOT NULL, 
+    "CreationTime" timestamp NOT NULL DEFAULT (now() at time zone 'utc'),
+	"PhoneNumber" VARCHAR(20) NULL, 
+    "Address" VARCHAR(300) NULL, 
+    "Complement" VARCHAR(150) NULL, 
+    "Name" VARCHAR(500) NULL, 
+    "Email" VARCHAR(200) NULL, 
+    "IsActive" BOOLEAN NOT NULL, 
+    "Neighborhood" VARCHAR(100) NULL, 
+	
+    CONSTRAINT FK_PetLover_User FOREIGN KEY ("UserId") REFERENCES "User" ("UserId")
+)
+
+-----------------
+
+CREATE TABLE "Pet"
+(
+    "PetId" UUID NOT NULL PRIMARY KEY, 
+    "PetLoverId" UUID NOT NULL, 
+    "CreationTime" timestamp NOT NULL DEFAULT (now() at time zone 'utc'),
+    "PetTypeId" INT NULL, 
+    "Breed" VARCHAR(100) NULL, 
+    "BirthDate" timestamp NULL DEFAULT (now() at time zone 'utc'),
+    "Gender" INT NULL, 
+    "Size" INT NULL, 
+    "Coat" INT NULL, 
+    "Name" VARCHAR(200) NULL,
+    "Note" VARCHAR(400) NULL, 
+    "IsActive" BOOLEAN NOT NULL, 
+
+    CONSTRAINT FK_Pet_PetLover FOREIGN KEY ("PetLoverId") REFERENCES "PetLover" ("PetLoverId")
+)
+
+-----------------
+
+CREATE TABLE "ScheduleItem"
+(
+    "ScheduleItemId" UUID NOT NULL PRIMARY KEY, 
+    "Name" VARCHAR(300) NOT NULL, 
+    "CreationTime" timestamp NULL DEFAULT (now() at time zone 'utc'), 
+    "IsActive" BOOLEAN NOT NULL 
+)
+
+-----------------
+
+CREATE TABLE "ScheduleItemClient"
+(
+    "ScheduleItemClientId" UUID NOT NULL PRIMARY KEY, 
+    "ScheduleItemId" UUID NOT NULL, 
+    "ClientId" UUID NOT NULL,
+	"IsActive" BOOLEAN NOT NULL, 
+    "CreationTime" timestamp NULL DEFAULT (now() at time zone 'utc'), 
+
+    CONSTRAINT FK_Client_Schedule_Item FOREIGN KEY ("ClientId") REFERENCES "Client" ("ClientId"),
+	CONSTRAINT FK_Schedule_Item_Client FOREIGN KEY ("ScheduleItemId") REFERENCES "ScheduleItem" ("ScheduleItemId")
+)
+
+-----------------
+
+
+CREATE TABLE "ScheduleItemEmployee"
+(
+    "ScheduleItemEmployeeId" UUID NOT NULL PRIMARY KEY, 
+    "ScheduleItemId" UUID NOT NULL, 
+    "EmployeeId" UUID NOT NULL,
+	"IsActive" BOOLEAN NOT NULL, 
+    "Price" NUMERIC(18, 2) NULL, 
+    "Hour" INT NULL, 
+    "Minutes" INT NULL, 
+    "CreationTime" timestamp NOT NULL DEFAULT (now() at time zone 'utc'), 
+    "Name" VARCHAR(300) NULL,
+	
+    CONSTRAINT FK_Employee_Schedule_Item FOREIGN KEY ("EmployeeId") REFERENCES "Employee" ("EmployeeId"),
+	CONSTRAINT FK_Schedule_Item_Employee FOREIGN KEY ("ScheduleItemId") REFERENCES "ScheduleItem" ("ScheduleItemId")
+)
+
+
+-----------------
+
+CREATE TABLE "Schedule"
+(
+    "ScheduleId" UUID NOT NULL PRIMARY KEY, 
+    "CreationTime" timestamp NOT NULL DEFAULT (now() at time zone 'utc'), 
+    "Period" INT NULL, 
+    "Date" DATE NOT NULL, 
+    "DateWithHour" timestamp NOT NULL,
+    "Note" VARCHAR(500) NULL, 
+    "Status" INT NOT NULL, 
+    "EmployeeId" UUID NOT NULL, 
+    "PetLoverId" UUID NULL, 
+    "PetId" UUID NULL, 
+    "ScheduleItemEmployeeId" UUID NULL,
+	"IsActive" BOOLEAN NOT NULL,
+	
+    CONSTRAINT FK_Schedule_Employee FOREIGN KEY ("EmployeeId") REFERENCES "Employee" ("EmployeeId"),
+	CONSTRAINT FK_Schedule_PetLover FOREIGN KEY ("PetLoverId") REFERENCES "PetLover" ("PetLoverId"),
+	CONSTRAINT FK_Schedule_Pet FOREIGN KEY ("PetId") REFERENCES "Pet" ("PetId"),
+	CONSTRAINT FK_Schedule_ScheduleItemEmployee FOREIGN KEY ("ScheduleItemEmployeeId") REFERENCES "ScheduleItemEmployee" ("ScheduleItemEmployeeId"),
+	CONSTRAINT UC_Employee_DateWithHour UNIQUE ("EmployeeId", "DateWithHour")
+)
+
+
+
+

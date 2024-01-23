@@ -1,0 +1,6 @@
+﻿add-migration Identity -Context UserContext
+update-database -Context UserContext
+
+----
+add-migration Initial -Context PetContext
+update-database -Context PetContext

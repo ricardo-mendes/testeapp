@@ -1,0 +1,165 @@
+GetAll em MyPetLovers
+
+GET: http://localhost:50597/api/mypetlover/client/61182A51-89D0-4D8A-A198-79FB7EF477CD
+
+RESULT:
+{
+        "petLoverId": "395466e4-a2ad-44d1-a078-5d17d773ddad",
+        "petName": "Robert",
+        "petLoverName": "Julia Robert",
+        "phoneNumber": "2130495867",
+        "address": "Av curabi",
+        "neighborhood": null,
+        "complement": "3000",
+		"isClub": true
+    }
+]
+
+--------------------
+Get em MyPetLover com Pets para Update
+
+GET: http://localhost:50597/api/mypetlover/8E9EE7DC-2247-4685-8DFD-6F89C9E9502C
+
+8E9EE7DC-2247-4685-8DFD-6F89C9E9502C é o id do petlover
+
+RESULT:
+{
+    "id": "8e9ee7dc-2247-4685-8dfd-6f89c9e9502c",
+    "userId": null,
+    "clientId": "93816f9e-670c-4631-97c3-0b0d20e3c594",
+    "name": "Ricardo 4",
+    "email": "ricardo4@email.com",
+    "phoneNumber": "12345678",
+    "neighborhood": "Olaria",
+    "address": "Rua Ministro Moreira de Abreu, 2004",
+    "complement": "Casa 4",
+    "gender": 1,
+    "user": null,
+	"isClub": true,
+    "petList": [
+        {
+            "id": "5da31b54-1467-4c75-9c28-74a207295bad",
+            "name": "Rex 2",
+            "petLoverId": "8e9ee7dc-2247-4685-8dfd-6f89c9e9502c",
+            "petTypeId": 1,
+            "breed": "Pastor Alemão 2",
+            "birthDate": "2011-04-02T00:00:00",
+            "gender": 1,
+            "size": 2,
+            "coat": 2,
+            "note": "Obs",
+            "petLover": null
+        }
+    ]
+}
+
+---------------------
+Cadastro de Petlover com Pets
+
+POST: http://localhost:50597/api/mypetlover
+
+Request Json:
+
+{
+  "neighborhood": "Olaria",
+  "phoneNumber": "12345678",
+  "address": "Rua Ministro Moreira de Abreu, 2004",
+  "complement": "Casa 4",
+  "name": "Ricardo 4",
+  "email": "ricardo4@email.com",
+  "gender": 1,
+  "clientId": "93816F9E-670C-4631-97C3-0B0D20E3C594",
+  "isClub": true,
+  "petList": [
+  	{
+	  "name": "Rex 2",
+	  "petLoverId": "c0d7aaf6-ce0a-4b0a-a47f-535c602b3f48",
+	  "petTypeId": 1,
+	  "breed": "Pastor Alemão 2",
+	  "birthDate": "2011-04-02",
+	  "gender": 1,
+	  "size": 2,
+	  "coat": 2,
+	  "note": "Obs"
+	}]
+}
+
+---------------------
+Update de Petlover com Pets
+
+PUT: http://localhost:50597/api/mypetlover
+
+Request Json:
+
+{
+  "id": "8E9EE7DC-2247-4685-8DFD-6F89C9E9502C",
+  "neighborhood": "Olaria",
+  "phoneNumber": "52345678",
+  "address": "Rua Ministro Moreira de Abreu, 2005",
+  "complement": "Casa 6",
+  "name": "Ricardo 6",
+  "email": "ricardo6@email.com",
+  "gender": 1,
+  "isClub": true,
+  "petList": [
+  	{
+  	  "id": "5DA31B54-1467-4C75-9C28-74A207295BAD",
+	  "name": "Rex 6",
+	  "petLoverId": "8E9EE7DC-2247-4685-8DFD-6F89C9E9502C",
+	  "petTypeId": 1,
+	  "breed": "Pastor Alemão 6",
+	  "birthDate": "2011-04-06",
+	  "gender": 1,
+	  "size": 2,
+	  "coat": 2,
+	  "note": "Obs"
+	},
+	{
+  	  "id": "2D3D0E8A-7A8E-44B3-8B09-921481D67AD4",
+	  "name": "Rex 7",
+	  "petLoverId": "8E9EE7DC-2247-4685-8DFD-6F89C9E9502C",
+	  "petTypeId": 1,
+	  "breed": "Pastor Alemão 7",
+	  "birthDate": "2011-04-06",
+	  "gender": 1,
+	  "size": 2,
+	  "coat": 2,
+	  "note": "Obs"
+	},
+	{
+	  "name": "Rex 9",
+	  "petLoverId": "8E9EE7DC-2247-4685-8DFD-6F89C9E9502C",
+	  "petTypeId": 1,
+	  "breed": "Pastor Alemão 9",
+	  "birthDate": "2011-04-06",
+	  "gender": 1,
+	  "size": 2,
+	  "coat": 2,
+	  "note": "Obs"
+	}]
+}
+
+
+---------------------
+Delete de Petlover com Pets
+
+DELETE: http://localhost:50597/api/mypetlover/B166B688-E4CC-40E2-B271-9FEAE2B3293B
+
+B166B688-E4CC-40E2-B271-9FEAE2B3293B é o id do petlover
+
+----------------------
+Get de agendamentos futuros
+
+GET: http://localhost:50597/api/mypetlover/schedules/697ece06-30c8-4a06-bf47-248b10abc853
+
+B166B688-E4CC-40E2-B271-9FEAE2B3293B é o id do petlover
+
+Request Json:
+
+[
+    {
+        "petName": "Buz",
+        "dateWithHour": "2020-05-22T00:00:00",
+        "status": 2
+    }
+]

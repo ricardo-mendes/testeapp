@@ -1,0 +1,149 @@
+﻿server:petadmindev.database.windows.net
+
+login:petadmindev
+
+senha:Appteste123
+
+Banco:PetAdmin.Database.Dev
+
+-----
+USE [petwisedb-dev]
+GO
+
+INSERT INTO [dbo].[ScheduleItem]
+           ([ScheduleItemUid]
+           ,[Name]
+           ,[IsActive]
+           ,[CreationTime]
+           ,[CreatedUserId]
+           ,[IsDeleted]
+           ,[LastModificationTime]
+           ,[LastModificationUserId]
+           ,[DeletionTime]
+           ,[DeletedUserId])
+     VALUES
+           (NEWID() 
+           ,'Banho'
+           ,1
+           ,GETDATE()
+           ,null
+           ,0
+           ,null
+           ,null
+           ,null
+           ,null)
+GO
+
+
+USE [petwisedb-dev]
+GO
+
+INSERT INTO [dbo].[ScheduleItem]
+           ([ScheduleItemUid]
+           ,[Name]
+           ,[IsActive]
+           ,[CreationTime]
+           ,[CreatedUserId]
+           ,[IsDeleted]
+           ,[LastModificationTime]
+           ,[LastModificationUserId]
+           ,[DeletionTime]
+           ,[DeletedUserId])
+     VALUES
+           (NEWID() 
+           ,'Tosa'
+           ,1
+           ,GETDATE()
+           ,null
+           ,0
+           ,null
+           ,null
+           ,null
+           ,null)
+GO
+
+
+USE [petwisedb-dev]
+GO
+
+INSERT INTO [dbo].[ScheduleItem]
+           ([ScheduleItemUid]
+           ,[Name]
+           ,[IsActive]
+           ,[CreationTime]
+           ,[CreatedUserId]
+           ,[IsDeleted]
+           ,[LastModificationTime]
+           ,[LastModificationUserId]
+           ,[DeletionTime]
+           ,[DeletedUserId])
+     VALUES
+           (NEWID() 
+           ,'Banho e Tosa'
+           ,1
+           ,GETDATE()
+           ,null
+           ,0
+           ,null
+           ,null
+           ,null
+           ,null)
+GO
+
+
+USE [petwisedb-dev]
+GO
+
+INSERT INTO [dbo].[ScheduleItem]
+           ([ScheduleItemUid]
+           ,[Name]
+           ,[IsActive]
+           ,[CreationTime]
+           ,[CreatedUserId]
+           ,[IsDeleted]
+           ,[LastModificationTime]
+           ,[LastModificationUserId]
+           ,[DeletionTime]
+           ,[DeletedUserId])
+     VALUES
+           (NEWID() 
+           ,'Consulta'
+           ,1
+           ,GETDATE()
+           ,null
+           ,0
+           ,null
+           ,null
+           ,null
+           ,null)
+GO
+
+
+USE [petwisedb-dev]
+GO
+
+INSERT INTO [dbo].[ScheduleItem]
+           ([ScheduleItemUid]
+           ,[Name]
+           ,[IsActive]
+           ,[CreationTime]
+           ,[CreatedUserId]
+           ,[IsDeleted]
+           ,[LastModificationTime]
+           ,[LastModificationUserId]
+           ,[DeletionTime]
+           ,[DeletedUserId])
+     VALUES
+           (NEWID() 
+           ,'Passeio'
+           ,1
+           ,GETDATE()
+           ,null
+           ,0
+           ,null
+           ,null
+           ,null
+           ,null)
+GO
+
+

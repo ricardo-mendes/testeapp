@@ -1,0 +1,85 @@
+﻿---------------
+USER CONTROLLER
+
+LOGIN
+http://localhost:50597/api/user/login (POST)
+
+{
+	"userLogin": "teste@email.com",
+	"password": "teste123"
+}
+
+TROCAR SENHA
+http://localhost:50597/api/user/changePassword (PUT)
+
+{
+	"id": "4B227FF6-FA54-4A15-B74A-32D914943569",
+	"userLogin": "teste@email.com",
+	"password": "teste123"  => nova senha
+}
+
+---------------
+CLIENT CONTROLLER
+
+CADASTRO
+http://localhost:50597/api/client (POST)
+{
+	"phoneNumber": "12345678",
+	"address": "Rua Ministro Moreira de Abreu, 100000",
+	"complement": "Casa 1",
+	"user": {
+		"name": "Pet",
+		"email": "pet@email.com",
+		"userLogin": "pet@email.com",
+		"userTypeId": 2,
+		"password": "pet123"
+	}
+}
+
+---------------
+PETLOVER CONTROLLER
+
+CADASTRO
+http://localhost:50597/api/petlover (POST)
+{
+	"phoneNumber": "12345678",
+	"address": "Rua Ministro Moreira de Abreu, 2000",
+	"complement": "Casa 1",
+	"user": {
+		"name": "Ricardo",
+		"email": "ricardo@email.com",
+		"userLogin": "ricardo@email.com",
+		"password": "ricardo123"
+	}
+}
+
+---------------
+PET CONTROLLER
+
+CADASTRO
+http://localhost:50597/api/pet (POST)
+
+{
+	"name": "Rex",
+	"petLoverId": "EC086934-9A8F-4FD0-AC83-FF52C49C32BB",
+	"petTypeId": 1,
+	"breed": "Pastor Alemão",
+	"birthDate": "2011-04-02",
+	"gender": 1,
+	"size": 2,
+	"coat": 2,
+	"note": "Obs"
+}
+
+---------------
+EMPLOYEE CONTROLLER
+
+CADASTRO
+http://localhost:50597/api/employee (POST)
+
+{
+	"clientId": "E181B143-A05C-41A6-A011-008A7A58B04A",
+	"name": "Mendes",
+	"email": "mendes@email.com",
+	"phoneNumber": "32324545"
+}
